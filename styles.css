@@ -25,9 +25,7 @@ body {
   padding:16px 14px 28px;
 }
 
-/* =========================
-   HEADER / BRANDING
-   ========================= */
+/* HEADER */
 .title {
   display:flex;
   justify-content:space-between;
@@ -35,7 +33,6 @@ body {
   gap:12px;
   margin-bottom:16px;
 }
-
 .brandLeft,
 .brandRight {
   display:flex;
@@ -49,7 +46,6 @@ body {
   border:1px solid rgba(255,255,255,0.08);
 }
 
-/* Macmillan logo – clean white backing */
 .logo-mac {
   width:44px;
   height:44px;
@@ -57,7 +53,6 @@ body {
   background:#ffffff;
 }
 
-/* Holmesdale logo – larger, venue emphasis */
 .logo-pub-large {
   width:56px;
   height:56px;
@@ -65,7 +60,6 @@ body {
   background:rgba(255,255,255,0.06);
 }
 
-/* Header text */
 h1 {
   font-size:20px;
   margin:0;
@@ -78,9 +72,16 @@ h1 {
   margin-top:4px;
 }
 
-/* =========================
-   GRID
-   ========================= */
+.ghost {
+  padding:10px 12px;
+  border-radius:12px;
+  border:1px solid rgba(255,255,255,0.14);
+  background:rgba(255,255,255,0.05);
+  color:var(--text);
+  font-weight:800;
+}
+
+/* GRID */
 .grid {
   display:grid;
   gap:14px;
@@ -93,9 +94,7 @@ h1 {
   }
 }
 
-/* =========================
-   CARDS
-   ========================= */
+/* CARDS */
 .card {
   background:rgba(18,25,36,0.92);
   border:1px solid rgba(255,255,255,0.06);
@@ -120,10 +119,6 @@ h1 {
   letter-spacing:0.5px;
 }
 
-.value.small {
-  font-size:22px;
-}
-
 .mono {
   font-variant-numeric: tabular-nums;
 }
@@ -132,9 +127,7 @@ h1 {
   height:12px;
 }
 
-/* =========================
-   HERO ROW (Remaining + Time)
-   ========================= */
+/* HERO ROW */
 .heroRow {
   display:grid;
   grid-template-columns:1fr;
@@ -142,25 +135,17 @@ h1 {
 }
 
 @media (min-width:520px){
-  .heroRow {
-    grid-template-columns:1fr 1fr;
-  }
+  .heroRow { grid-template-columns:1fr 1fr; }
 }
 
 .heroStat {
   padding:16px;
   border-radius:18px;
-  background:linear-gradient(
-    180deg,
-    rgba(53,208,127,0.14),
-    rgba(53,208,127,0.04)
-  );
+  background:linear-gradient(180deg, rgba(53,208,127,0.14), rgba(53,208,127,0.04));
   border:1px solid rgba(53,208,127,0.35);
 }
 
-/* =========================
-   SECONDARY ROW
-   ========================= */
+/* SECONDARY ROW */
 .secondaryRow {
   display:grid;
   grid-template-columns:1fr;
@@ -168,9 +153,7 @@ h1 {
 }
 
 @media (min-width:520px){
-  .secondaryRow {
-    grid-template-columns:0.9fr 1.1fr;
-  }
+  .secondaryRow { grid-template-columns:0.9fr 1.1fr; }
 }
 
 .stat {
@@ -180,20 +163,15 @@ h1 {
   border:1px solid rgba(255,255,255,0.06);
 }
 
-.stat.compact {
-  padding:12px;
-}
+.stat.compact { padding:12px; }
 
-/* =========================
-   PROGRESS BAR
-   ========================= */
+/* PROGRESS */
 .barOuter {
   height:14px;
   background:rgba(255,255,255,0.06);
   border-radius:999px;
   overflow:hidden;
 }
-
 .barInner {
   height:100%;
   width:0%;
@@ -201,24 +179,16 @@ h1 {
   transition:width 150ms ease;
 }
 
-/* =========================
-   CONTROLS
-   ========================= */
+/* CONTROLS */
 .row {
   display:flex;
   flex-wrap:wrap;
   gap:10px;
   align-items:center;
 }
+.spread { justify-content:space-between; }
 
-.spread {
-  justify-content:space-between;
-}
-
-.field {
-  flex:1;
-  min-width:150px;
-}
+.field { flex:1; min-width:150px; }
 
 input[type="number"]{
   width:150px;
@@ -239,59 +209,25 @@ button{
   font-weight:700;
 }
 
-button.primary {
-  background:linear-gradient(
-    180deg,
-    rgba(53,208,127,0.95),
-    rgba(53,208,127,0.75)
-  );
-  color:#08110b;
-  border:none;
-}
+button.primary { background:linear-gradient(180deg,rgba(53,208,127,0.95),rgba(53,208,127,0.75)); color:#08110b; border:none; }
+button.danger  { background:linear-gradient(180deg,rgba(255,107,107,0.95),rgba(255,107,107,0.75)); color:#1a0707; border:none; }
+button.warn    { background:linear-gradient(180deg,rgba(255,204,102,0.95),rgba(255,204,102,0.75)); color:#201504; border:none; }
 
-button.danger {
-  background:linear-gradient(
-    180deg,
-    rgba(255,107,107,0.95),
-    rgba(255,107,107,0.75)
-  );
-  color:#1a0707;
-  border:none;
-}
-
-button.warn {
-  background:linear-gradient(
-    180deg,
-    rgba(255,204,102,0.95),
-    rgba(255,204,102,0.75)
-  );
-  color:#201504;
-  border:none;
-}
-
-/* Quick score chips */
 .quick {
   display:flex;
   flex-wrap:wrap;
   gap:8px;
   margin-top:10px;
 }
+.chip { border-radius:999px; padding:10px 12px; }
 
-.chip {
-  border-radius:999px;
-  padding:10px 12px;
-}
-
-/* Notes */
 .note {
   font-size:12px;
   color:var(--muted);
   margin-top:10px;
 }
 
-/* =========================
-   HISTORY
-   ========================= */
+/* HISTORY */
 .history {
   margin-top:8px;
   max-height:260px;
@@ -299,33 +235,29 @@ button.warn {
   border-radius:12px;
   border:1px solid rgba(255,255,255,0.06);
 }
+.histItem { padding:10px 12px; border-bottom:1px solid rgba(255,255,255,0.06); }
+.histItem:last-child { border-bottom:none; }
 
-.histItem {
-  padding:10px 12px;
-  border-bottom:1px solid rgba(255,255,255,0.06);
-}
+/* BIG SCREEN MODE */
+body.big .wrap { max-width: 1400px; }
+body.big .grid { grid-template-columns: 1fr; }
+body.big .card { padding: 22px; }
 
-.histItem:last-child {
-  border-bottom:none;
-}
+body.big .value.hero { font-size: 72px; }
+body.big .label { font-size: 14px; }
+body.big .sub { font-size: 13px; }
 
-/* =========================
-   MOBILE TWEAKS
-   ========================= */
+body.big .barOuter { height: 18px; }
+body.big .heroRow { gap: 18px; }
+body.big .heroStat { padding: 22px; border-radius: 22px; }
+body.big .secondaryRow { gap: 16px; }
+body.big .stat.compact { padding: 18px; }
+
+body.big .bigHide { display:none !important; }
+
+/* MOBILE */
 @media (max-width:420px){
-  .logo-mac {
-    width:36px;
-    height:36px;
-    padding:5px;
-  }
-
-  .logo-pub-large {
-    width:44px;
-    height:44px;
-    padding:6px;
-  }
-
-  .value.hero {
-    font-size:34px;
-  }
+  .logo-mac{ width:36px; height:36px; padding:5px; }
+  .logo-pub-large{ width:44px; height:44px; padding:6px; }
+  .value.hero{ font-size:34px; }
 }
