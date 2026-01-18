@@ -1,6 +1,8 @@
 (() => {
   const $ = (id) => document.getElementById(id);
+
   const stateKey = "macmillan_darts_tracker_pwa_v4";
+  const uiKey = "macmillan_ui_bigmode";
   const now = () => Date.now();
 
   const defaultState = {
@@ -8,12 +10,7 @@
     hours: 12,
     total: 0,
     history: [],
-    timer: {
-      durationMs: 12 * 60 * 60 * 1000,
-      running: false,
-      startedAt: null,
-      elapsedMs: 0
-    }
+    timer: { durationMs: 12*60*60*1000, running:false, startedAt:null, elapsedMs:0 }
   };
 
   function load() {
@@ -21,82 +18,60 @@
       const raw = localStorage.getItem(stateKey);
       if (!raw) return structuredClone(defaultState);
       const s = JSON.parse(raw);
-      return {
-        ...structuredClone(defaultState),
-        ...s,
-        timer: { ...structuredClone(defaultState.timer), ...(s.timer || {}) }
-      };
+      return { ...structuredClone(defaultState), ...s, timer: { ...structuredClone(defaultState.timer), ...(s.timer||{}) } };
     } catch {
       return structuredClone(defaultState);
     }
   }
+  function save(s){ localStorage.setItem(stateKey, JSON.stringify(s)); }
 
-  function save(s) {
-    localStorage.setItem(stateKey, JSON.stringify(s));
+  function fmt(n){ return Math.max(0, Math.floor(Number(n)||0)).toLocaleString("en-GB"); }
+  function clampInt(n,min=0,max=Number.MAX_SAFE_INTEGER){
+    n = Math.floor(Number(n)||0);
+    if(!Number.isFinite(n)) n=min;
+    return Math.min(max, Math.max(min,n));
   }
 
-  function fmt(n) {
-    const x = Math.max(0, Math.floor(Number(n) || 0));
-    return x.toLocaleString("en-GB");
+  // ----- Big screen toggle -----
+  function getBigMode(){ return localStorage.getItem(uiKey) === "1"; }
+  function setBigMode(on){
+    localStorage.setItem(uiKey, on ? "1" : "0");
+    document.body.classList.toggle("big", on);
+    const btn = $("bigModeBtn");
+    if (btn) btn.textContent = on ? "Big screen: On" : "Big screen: Off";
   }
 
-  function clampInt(n, min = 0, max = Number.MAX_SAFE_INTEGER) {
-    n = Math.floor(Number(n) || 0);
-    if (!Number.isFinite(n)) n = min;
-    return Math.min(max, Math.max(min, n));
-  }
-
-  function setStatus(text, kind = "") {
-    const el = $("statusPill");
-    if (!el) return;
-    el.textContent = text;
-    el.style.color = "var(--muted)";
-    if (kind === "ok") el.style.color = "var(--good)";
-    if (kind === "done") el.style.color = "var(--warn)";
-  }
-
-  function computeElapsedMs(t) {
+  function computeElapsedMs(t){
     const base = t.elapsedMs || 0;
     if (t.running && t.startedAt) return base + (now() - t.startedAt);
     return base;
   }
 
-  function renderTimer(s) {
+  function renderTimer(s){
     const t = s.timer;
-
     const elapsed = computeElapsedMs(t);
-    const duration = t.durationMs || 0;
-    const msLeft = Math.max(0, duration - elapsed);
+    const msLeft = Math.max(0, (t.durationMs||0) - elapsed);
 
     const hh = Math.floor(msLeft / 3600000);
     const mm = Math.floor((msLeft % 3600000) / 60000);
     const ss = Math.floor((msLeft % 60000) / 1000);
 
-    const timeLeftEl = $("timeLeft");
+    $("timeLeft") && ($("timeLeft").textContent =
+      `${String(hh).padStart(2,"0")}:${String(mm).padStart(2,"0")}:${String(ss).padStart(2,"0")}`);
+
     const endsAtEl = $("endsAt");
-
-    if (timeLeftEl) {
-      timeLeftEl.textContent =
-        `${String(hh).padStart(2, "0")}:${String(mm).padStart(2, "0")}:${String(ss).padStart(2, "0")}`;
-    }
-
     if (!endsAtEl) return;
 
     if (!t.running) {
-      if ((t.elapsedMs || 0) === 0) endsAtEl.textContent = "Timer not started";
-      else endsAtEl.textContent = "Paused";
+      endsAtEl.textContent = (t.elapsedMs||0) === 0 ? "Timer not started" : "Paused";
       return;
     }
 
-    const ends = new Date(now() + msLeft).toLocaleString("en-GB", {
-      weekday: "short",
-      hour: "2-digit",
-      minute: "2-digit"
-    });
+    const ends = new Date(now() + msLeft).toLocaleString("en-GB", { weekday:"short", hour:"2-digit", minute:"2-digit" });
     endsAtEl.textContent = `Ends: ${ends}`;
   }
 
-  function render() {
+  function render(){
     const s = load();
 
     $("targetInput") && ($("targetInput").value = s.target);
@@ -112,24 +87,18 @@
     $("pct") && ($("pct").textContent = `${Math.min(100, pct).toFixed(1)}%`);
     $("bar") && ($("bar").style.width = `${Math.min(100, Math.max(0, pct))}%`);
 
-    if (s.total >= s.target) setStatus("Target smashed ✅", "done");
-    else setStatus("Tracking…", "ok");
-
-    // Recent entries
     const box = $("history");
     if (box) {
       const hist = s.history.slice().reverse();
       box.innerHTML = "";
-
-      if (hist.length === 0) {
+      if (!hist.length) {
         box.innerHTML = `<div class="histItem"><div class="sub">No entries yet.</div></div>`;
       } else {
-        for (const item of hist.slice(0, 20)) {
+        for (const item of hist.slice(0,20)) {
           const d = item.delta;
           const sign = d >= 0 ? "+" : "−";
           const abs = Math.abs(d);
-          const time = new Date(item.t).toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" });
-
+          const time = new Date(item.t).toLocaleTimeString("en-GB", { hour:"2-digit", minute:"2-digit" });
           const div = document.createElement("div");
           div.className = "histItem";
           div.innerHTML = `
@@ -146,22 +115,18 @@
     renderTimer(s);
   }
 
-  function applySettings() {
+  function applySettings(){
     const s = load();
     s.target = clampInt($("targetInput")?.value, 1);
     s.hours = clampInt($("hoursInput")?.value, 1, 72);
-
-    if (!s.timer.running) {
-      s.timer.durationMs = (s.hours || 12) * 60 * 60 * 1000;
-    }
-
+    if (!s.timer.running) s.timer.durationMs = (s.hours||12) * 60*60*1000;
     save(s);
     render();
   }
 
-  function addDelta(delta) {
+  function addDelta(delta){
     const s = load();
-    delta = Math.floor(Number(delta) || 0);
+    delta = Math.floor(Number(delta)||0);
     if (!delta) return;
 
     const before = s.total;
@@ -176,16 +141,16 @@
     render();
   }
 
-  function undo() {
+  function undo(){
     const s = load();
     if (!s.history.length) return;
     s.history.pop();
-    s.total = s.history.length ? s.history[s.history.length - 1].after : 0;
+    s.total = s.history.length ? s.history[s.history.length-1].after : 0;
     save(s);
     render();
   }
 
-  function resetScore() {
+  function resetScore(){
     const s = load();
     s.total = 0;
     s.history = [];
@@ -193,64 +158,59 @@
     render();
   }
 
-  function wipeAll() {
+  function wipeAll(){
     localStorage.removeItem(stateKey);
+    localStorage.removeItem(uiKey);
+    setBigMode(false);
     render();
   }
 
-  function startTimer() {
+  function startTimer(){
     const s = load();
     if (s.timer.running) return;
-
-    s.timer.durationMs = (s.hours || 12) * 60 * 60 * 1000;
+    s.timer.durationMs = (s.hours||12) * 60*60*1000;
     s.timer.startedAt = now();
     s.timer.running = true;
-
-    save(s);
-    render();
+    save(s); render();
   }
 
-  function stopTimer() {
+  function stopTimer(){
     const s = load();
     if (!s.timer.running) return;
-
-    const sinceStart = s.timer.startedAt ? (now() - s.timer.startedAt) : 0;
-    s.timer.elapsedMs = (s.timer.elapsedMs || 0) + sinceStart;
-
+    const since = s.timer.startedAt ? (now() - s.timer.startedAt) : 0;
+    s.timer.elapsedMs = (s.timer.elapsedMs||0) + since;
     s.timer.startedAt = null;
     s.timer.running = false;
-
-    save(s);
-    render();
+    save(s); render();
   }
 
-  function resetTimer() {
+  function resetTimer(){
     const s = load();
     s.timer.startedAt = null;
     s.timer.running = false;
     s.timer.elapsedMs = 0;
-    s.timer.durationMs = (s.hours || 12) * 60 * 60 * 1000;
-    save(s);
-    render();
+    s.timer.durationMs = (s.hours||12) * 60*60*1000;
+    save(s); render();
   }
 
-  // Manual input: read + clear + CLOSE keyboard
-  function readScoreInput() {
+  function readScoreInput(){
     const input = $("scoreInput");
     if (!input) return 0;
     const raw = String(input.value ?? "").trim();
-    const cleaned = raw.replace(/,/g, "");
+    const cleaned = raw.replace(/,/g,"");
     return clampInt(cleaned, 0, 1000000);
   }
 
-  function clearAndCloseKeyboard() {
+  function clearAndCloseKeyboard(){
     const input = $("scoreInput");
     if (!input) return;
     input.value = "";
-    input.blur(); // ✅ this is the key: closes number pad and won’t reopen until user taps input again
+    input.blur();
   }
 
-  // Wire up UI
+  // Events
+  $("bigModeBtn")?.addEventListener("click", () => setBigMode(!getBigMode()));
+
   $("addBtn")?.addEventListener("click", () => {
     applySettings();
     const v = readScoreInput();
@@ -269,35 +229,26 @@
 
   $("undoBtn")?.addEventListener("click", undo);
 
-  $("resetBtn")?.addEventListener("click", () => {
-    if (confirm("Reset total points & history back to zero?")) resetScore();
-  });
-
-  $("wipeBtn")?.addEventListener("click", () => {
-    if (confirm("Wipe everything (score, timer, settings) on this device?")) wipeAll();
-  });
+  $("resetBtn")?.addEventListener("click", () => confirm("Reset score back to zero?") && resetScore());
+  $("wipeBtn")?.addEventListener("click", () => confirm("Wipe everything on this device?") && wipeAll());
 
   $("targetInput")?.addEventListener("change", applySettings);
   $("hoursInput")?.addEventListener("change", applySettings);
 
   $("startBtn")?.addEventListener("click", startTimer);
   $("stopBtn")?.addEventListener("click", stopTimer);
+  $("resetTimerBtn")?.addEventListener("click", () => confirm("Reset the timer back to full length?") && resetTimer());
 
-  $("resetTimerBtn")?.addEventListener("click", () => {
-    if (confirm("Reset the timer back to full length?")) resetTimer();
-  });
-
-  // Quick add chips should NOT open keyboard
   document.querySelectorAll("[data-add]").forEach((btn) => {
     btn.addEventListener("click", () => {
       addDelta(clampInt(btn.getAttribute("data-add"), 0, 1000));
-      // make sure keyboard stays closed if someone previously tapped the input
       $("scoreInput")?.blur();
     });
   });
 
-  // Timer display tick
-  setInterval(() => renderTimer(load()), 250);
+  // Apply big mode on load
+  setBigMode(getBigMode());
 
+  setInterval(() => renderTimer(load()), 250);
   render();
 })();
