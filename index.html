@@ -6,7 +6,6 @@
   <meta name="theme-color" content="#0b0f14" />
   <title>Macmillan Darts Tracker</title>
 
-  <!-- iOS mini-app behaviour -->
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 
@@ -27,38 +26,53 @@
       </div>
 
       <div class="brandRight">
-        <div class="pill" id="statusPill">Ready</div>
+        <div class="pill" id="statusPill">Tracking…</div>
         <img src="holmesdale.png" alt="Lord Holmesdale" class="logo logo-pub" />
       </div>
     </header>
 
     <main class="grid">
-      <!-- SCORE CARD -->
+      <!-- MAIN TRACKING CARD -->
       <section class="card">
-        <div class="statRow">
-          <div class="stat">
+        <!-- HERO ROW: Remaining + Time Remaining -->
+        <div class="heroRow">
+          <div class="heroStat">
+            <div class="label">Points remaining</div>
+            <div class="value hero" id="remaining">100,000</div>
+            <div class="sub mono" id="targetLabel">Target: 100,000</div>
+          </div>
+
+          <div class="heroStat">
+            <div class="label">Time remaining</div>
+            <div class="value hero mono" id="timeLeft">—</div>
+            <div class="sub mono" id="endsAt">Timer not started</div>
+          </div>
+        </div>
+
+        <div class="spacer"></div>
+
+        <!-- Secondary row: Total + Progress -->
+        <div class="secondaryRow">
+          <div class="stat compact">
             <div class="label">Total points</div>
             <div class="value" id="total">0</div>
           </div>
-          <div class="stat highlight">
-            <div class="label">Remaining</div>
-            <div class="value" id="remaining">100,000</div>
+
+          <div class="stat compact">
+            <div class="label">Progress</div>
+            <div class="barOuter">
+              <div class="barInner" id="bar"></div>
+            </div>
+            <div class="row spread">
+              <div class="sub mono" id="pct">0.0%</div>
+              <div class="sub mono">towards target</div>
+            </div>
           </div>
         </div>
 
         <div class="spacer"></div>
 
-        <div class="label">Progress</div>
-        <div class="barOuter">
-          <div class="barInner" id="bar"></div>
-        </div>
-        <div class="row spread">
-          <div class="sub mono" id="pct">0.0%</div>
-          <div class="sub mono" id="targetLabel">Target: 100,000</div>
-        </div>
-
-        <div class="spacer"></div>
-
+        <!-- Input controls -->
         <div class="row">
           <input id="scoreInput" type="number" inputmode="numeric" min="0" step="1" placeholder="Score (e.g. 60)" />
           <button class="primary" id="addBtn">+ Add</button>
@@ -78,12 +92,11 @@
         </div>
 
         <p class="note">
-          Charity night for <b>Macmillan Cancer Support</b>.  
-          Chalk carefully. Undo freely.
+          Charity night for <b>Macmillan Cancer Support</b>. Chalk carefully. Undo freely.
         </p>
       </section>
 
-      <!-- SETTINGS / TIMER -->
+      <!-- SETTINGS / CONTROLS -->
       <section class="card">
         <div class="row spread">
           <div>
@@ -115,14 +128,6 @@
           <button class="primary" id="startBtn">Start / Resume</button>
           <button id="stopBtn">Pause</button>
           <button id="resetTimerBtn">Reset timer</button>
-        </div>
-
-        <div class="spacer"></div>
-
-        <div class="stat subtle">
-          <div class="label">Time remaining</div>
-          <div class="value small mono" id="timeLeft">—</div>
-          <div class="sub mono" id="endsAt">Timer not started</div>
         </div>
 
         <div class="spacer"></div>
