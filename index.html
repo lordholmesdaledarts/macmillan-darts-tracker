@@ -2,7 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1" />
+  <!-- ✅ Allow zoom again (removed maximum-scale=1) -->
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <meta name="theme-color" content="#0b0f14" />
   <title>Macmillan Darts Tracker</title>
 
@@ -34,7 +35,6 @@
     <main class="grid">
       <!-- MAIN TRACKING CARD -->
       <section class="card" id="mainCard">
-        <!-- HERO ROW: Remaining + Time Remaining -->
         <div class="heroRow">
           <div class="heroStat">
             <div class="label">Points remaining</div>
@@ -51,7 +51,6 @@
 
         <div class="spacer"></div>
 
-        <!-- Secondary row: Total + Progress -->
         <div class="secondaryRow">
           <div class="stat compact">
             <div class="label">Total points</div>
@@ -80,7 +79,7 @@
           <button class="warn" id="undoBtn">Undo</button>
         </div>
 
-        <!-- QUICK ENTRY BUTTONS (includes 301 + 501) -->
+        <!-- QUICK ENTRY BUTTONS -->
         <div class="quick bigHide">
           <button class="chip" data-add="26">+26</button>
           <button class="chip" data-add="41">+41</button>
