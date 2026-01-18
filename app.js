@@ -3,6 +3,7 @@
 
   const stateKey = "macmillan_darts_tracker_pwa_v4";
   const uiKey = "macmillan_ui_bigmode";
+  const celebrateKey = "macmillan_target_completed";
   const now = () => Date.now();
 
   const defaultState = {
@@ -52,6 +53,22 @@
     document.body.classList.toggle("big", on);
     const btn = $("bigModeBtn");
     if (btn) btn.textContent = on ? "Big screen: On" : "Big screen: Off";
+  }
+
+  // ----- Celebration overlay -----
+  function showCelebrate() {
+    const el = $("celebrateOverlay");
+    if (!el) return;
+    el.classList.remove("hidden");
+    el.setAttribute("aria-hidden", "false");
+    localStorage.setItem(celebrateKey, "1");
+  }
+
+  function hideCelebrate() {
+    const el = $("celebrateOverlay");
+    if (!el) return;
+    el.classList.add("hidden");
+    el.setAttribute("aria-hidden", "true");
   }
 
   function computeElapsedMs(t) {
@@ -135,6 +152,17 @@
     }
 
     renderTimer(s);
+
+    // Show celebration only once per completion
+    if (remaining === 0 && localStorage.getItem(celebrateKey) !== "1") {
+      showCelebrate();
+    }
+
+    // If score goes back above 0 (e.g., subtract/undo), allow celebration again later
+    if (remaining > 0 && localStorage.getItem(celebrateKey) === "1") {
+      localStorage.removeItem(celebrateKey);
+      hideCelebrate();
+    }
   }
 
   function applySettings() {
@@ -157,7 +185,6 @@
 
     s.total = after;
     s.history.push({ t: now(), delta: actualDelta, after });
-
     if (s.history.length > 1200) s.history = s.history.slice(-1200);
 
     save(s);
@@ -168,7 +195,7 @@
     const s = load();
     if (!s.history.length) return;
 
-    // ✅ Confirm to prevent accidental tap
+    // Confirm to prevent accidental tap
     const ok = confirm("Undo the last entry?");
     if (!ok) return;
 
@@ -182,6 +209,8 @@
     const s = load();
     s.total = 0;
     s.history = [];
+    localStorage.removeItem(celebrateKey);
+    hideCelebrate();
     save(s);
     render();
   }
@@ -189,6 +218,8 @@
   function wipeAll() {
     localStorage.removeItem(stateKey);
     localStorage.removeItem(uiKey);
+    localStorage.removeItem(celebrateKey);
+    hideCelebrate();
     setBigMode(false);
     render();
   }
@@ -277,12 +308,21 @@
     if (confirm("Reset the timer back to full length?")) resetTimer();
   });
 
-  // Quick add buttons (now includes 301 + 501)
+  // Quick add buttons
   document.querySelectorAll("[data-add]").forEach((btn) => {
     btn.addEventListener("click", () => {
       addDelta(clampInt(btn.getAttribute("data-add"), 0, 10000));
       $("scoreInput")?.blur();
     });
+  });
+
+  // Celebration overlay buttons
+  $("closeCelebrate")?.addEventListener("click", hideCelebrate);
+
+  $("resetCelebrate")?.addEventListener("click", () => {
+    if (confirm("Reset score back to zero?")) {
+      resetScore();
+    }
   });
 
   // Apply big mode on load
