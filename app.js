@@ -1,13 +1,13 @@
 (() => {
   const $ = (id) => document.getElementById(id);
-  const stateKey = "macmillan_darts_tracker_pwa_v3";
+  const stateKey = "macmillan_darts_tracker_pwa_v4";
   const now = () => Date.now();
 
   const defaultState = {
     target: 100000,
     hours: 12,
     total: 0,
-    history: [], // {t, delta, after}
+    history: [],
     timer: {
       durationMs: 12 * 60 * 60 * 1000,
       running: false,
@@ -99,26 +99,18 @@
   function render() {
     const s = load();
 
-    const targetInput = $("targetInput");
-    const hoursInput = $("hoursInput");
-    if (targetInput) targetInput.value = s.target;
-    if (hoursInput) hoursInput.value = s.hours;
-
-    const totalEl = $("total");
-    const remainingEl = $("remaining");
-    const targetLabelEl = $("targetLabel");
-    const pctEl = $("pct");
-    const barEl = $("bar");
+    $("targetInput") && ($("targetInput").value = s.target);
+    $("hoursInput") && ($("hoursInput").value = s.hours);
 
     const remaining = Math.max(0, s.target - s.total);
 
-    if (totalEl) totalEl.textContent = fmt(s.total);
-    if (remainingEl) remainingEl.textContent = fmt(remaining);
-    if (targetLabelEl) targetLabelEl.textContent = `Target: ${fmt(s.target)}`;
+    $("total") && ($("total").textContent = fmt(s.total));
+    $("remaining") && ($("remaining").textContent = fmt(remaining));
+    $("targetLabel") && ($("targetLabel").textContent = `Target: ${fmt(s.target)}`);
 
     const pct = s.target > 0 ? (s.total / s.target) * 100 : 0;
-    if (pctEl) pctEl.textContent = `${Math.min(100, pct).toFixed(1)}%`;
-    if (barEl) barEl.style.width = `${Math.min(100, Math.max(0, pct))}%`;
+    $("pct") && ($("pct").textContent = `${Math.min(100, pct).toFixed(1)}%`);
+    $("bar") && ($("bar").style.width = `${Math.min(100, Math.max(0, pct))}%`);
 
     if (s.total >= s.target) setStatus("Target smashed ✅", "done");
     else setStatus("Tracking…", "ok");
@@ -159,7 +151,6 @@
     s.target = clampInt($("targetInput")?.value, 1);
     s.hours = clampInt($("hoursInput")?.value, 1, 72);
 
-    // Only update duration if timer is not running
     if (!s.timer.running) {
       s.timer.durationMs = (s.hours || 12) * 60 * 60 * 1000;
     }
@@ -179,7 +170,6 @@
 
     s.total = after;
     s.history.push({ t: now(), delta: actualDelta, after });
-
     if (s.history.length > 1200) s.history = s.history.slice(-1200);
 
     save(s);
@@ -244,32 +234,29 @@
     render();
   }
 
-  // ---- Manual input: robust read + clear + refocus ----
+  // Manual input: read + clear + CLOSE keyboard
   function readScoreInput() {
     const input = $("scoreInput");
     if (!input) return 0;
-
     const raw = String(input.value ?? "").trim();
-    // Allow commas/spaces just in case someone types "1,000"
     const cleaned = raw.replace(/,/g, "");
-    const v = clampInt(cleaned, 0, 1000000);
-    return v;
+    return clampInt(cleaned, 0, 1000000);
   }
 
-  function clearAndFocusInput() {
+  function clearAndCloseKeyboard() {
     const input = $("scoreInput");
     if (!input) return;
     input.value = "";
-    input.focus();
+    input.blur(); // ✅ this is the key: closes number pad and won’t reopen until user taps input again
   }
 
-  // Wire up UI events
+  // Wire up UI
   $("addBtn")?.addEventListener("click", () => {
     applySettings();
     const v = readScoreInput();
     if (!v) return;
     addDelta(v);
-    clearAndFocusInput();
+    clearAndCloseKeyboard();
   });
 
   $("subBtn")?.addEventListener("click", () => {
@@ -277,7 +264,7 @@
     const v = readScoreInput();
     if (!v) return;
     addDelta(-v);
-    clearAndFocusInput();
+    clearAndCloseKeyboard();
   });
 
   $("undoBtn")?.addEventListener("click", undo);
@@ -300,20 +287,16 @@
     if (confirm("Reset the timer back to full length?")) resetTimer();
   });
 
-  // Pressing Enter on the keyboard = Add
-  $("scoreInput")?.addEventListener("keydown", (e) => {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      $("addBtn")?.click();
-    }
-  });
-
-  // Quick add buttons
+  // Quick add chips should NOT open keyboard
   document.querySelectorAll("[data-add]").forEach((btn) => {
-    btn.addEventListener("click", () => addDelta(clampInt(btn.getAttribute("data-add"), 0, 1000)));
+    btn.addEventListener("click", () => {
+      addDelta(clampInt(btn.getAttribute("data-add"), 0, 1000));
+      // make sure keyboard stays closed if someone previously tapped the input
+      $("scoreInput")?.blur();
+    });
   });
 
-  // Update timer display frequently
+  // Timer display tick
   setInterval(() => renderTimer(load()), 250);
 
   render();
