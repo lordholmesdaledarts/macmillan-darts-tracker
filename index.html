@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#0b0f14" />
   <title>Macmillan Darts Tracker</title>
 
-  <!-- iOS “mini app” behaviour -->
+  <!-- iOS mini-app behaviour -->
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 
@@ -15,22 +15,32 @@
 </head>
 <body>
   <div class="wrap">
-    <header class="title">
-      <div>
-        <h1>Macmillan Darts: 100,000 Tracker</h1>
-        <p class="sub">Add each visit score (60 / 45 / 100 / 140). Offline. Undo. Big buttons.</p>
+
+    <!-- HEADER / BRANDING -->
+    <header class="title branded">
+      <div class="brandLeft">
+        <img src="macmillan.png" alt="Macmillan Cancer Support" class="logo logo-mac" />
+        <div>
+          <h1>Macmillan Darts</h1>
+          <p class="sub">12 hours · 100,000 points · Lord Holmesdale</p>
+        </div>
       </div>
-      <div class="pill" id="statusPill">Ready</div>
+
+      <div class="brandRight">
+        <div class="pill" id="statusPill">Ready</div>
+        <img src="holmesdale.png" alt="Lord Holmesdale" class="logo logo-pub" />
+      </div>
     </header>
 
     <main class="grid">
+      <!-- SCORE CARD -->
       <section class="card">
         <div class="statRow">
           <div class="stat">
             <div class="label">Total points</div>
             <div class="value" id="total">0</div>
           </div>
-          <div class="stat">
+          <div class="stat highlight">
             <div class="label">Remaining</div>
             <div class="value" id="remaining">100,000</div>
           </div>
@@ -39,7 +49,9 @@
         <div class="spacer"></div>
 
         <div class="label">Progress</div>
-        <div class="barOuter"><div class="barInner" id="bar"></div></div>
+        <div class="barOuter">
+          <div class="barInner" id="bar"></div>
+        </div>
         <div class="row spread">
           <div class="sub mono" id="pct">0.0%</div>
           <div class="sub mono" id="targetLabel">Target: 100,000</div>
@@ -48,7 +60,7 @@
         <div class="spacer"></div>
 
         <div class="row">
-          <input id="scoreInput" type="number" inputmode="numeric" min="0" step="1" placeholder="Score (e.g., 60)" />
+          <input id="scoreInput" type="number" inputmode="numeric" min="0" step="1" placeholder="Score (e.g. 60)" />
           <button class="primary" id="addBtn">+ Add</button>
           <button class="danger" id="subBtn">− Subtract</button>
           <button class="warn" id="undoBtn">Undo</button>
@@ -65,18 +77,22 @@
           <button class="chip" data-add="180">+180</button>
         </div>
 
-        <p class="note">Tip: If the chalker panics, hit <b>Undo</b> then re-enter.</p>
+        <p class="note">
+          Charity night for <b>Macmillan Cancer Support</b>.  
+          Chalk carefully. Undo freely.
+        </p>
       </section>
 
+      <!-- SETTINGS / TIMER -->
       <section class="card">
         <div class="row spread">
           <div>
-            <div class="label">Settings</div>
-            <div class="sub">Saved on device (offline)</div>
+            <div class="label">Event settings</div>
+            <div class="sub">Stored on this device (offline safe)</div>
           </div>
           <div class="row">
-            <button id="resetBtn">Reset</button>
-            <button id="wipeBtn">Wipe</button>
+            <button id="resetBtn">Reset score</button>
+            <button id="wipeBtn">Wipe all</button>
           </div>
         </div>
 
@@ -96,8 +112,8 @@
         <div class="spacer"></div>
 
         <div class="row">
-          <button class="primary" id="startBtn">Start / Resume timer</button>
-          <button id="stopBtn">Stop / Pause</button>
+          <button class="primary" id="startBtn">Start / Resume</button>
+          <button id="stopBtn">Pause</button>
           <button id="resetTimerBtn">Reset timer</button>
         </div>
 
@@ -113,16 +129,12 @@
 
         <div class="label">Recent entries</div>
         <div class="history" id="history"></div>
-
-        <div class="spacer"></div>
-        <div class="sub">Home Screen tip: Share → Add to Home Screen (opens full-screen like an app).</div>
       </section>
     </main>
   </div>
 
   <script src="app.js"></script>
   <script>
-    // Register offline caching
     if ("serviceWorker" in navigator) {
       navigator.serviceWorker.register("./sw.js").catch(() => {});
     }
