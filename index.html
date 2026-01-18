@@ -6,6 +6,7 @@
   <meta name="theme-color" content="#0b0f14" />
   <title>Macmillan Darts Tracker</title>
 
+  <!-- iOS “mini app” behaviour -->
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 
@@ -96,7 +97,8 @@
 
         <div class="row">
           <button class="primary" id="startBtn">Start / Resume timer</button>
-          <button id="stopBtn">Stop</button>
+          <button id="stopBtn">Stop / Pause</button>
+          <button id="resetTimerBtn">Reset timer</button>
         </div>
 
         <div class="spacer"></div>
@@ -111,12 +113,16 @@
 
         <div class="label">Recent entries</div>
         <div class="history" id="history"></div>
+
+        <div class="spacer"></div>
+        <div class="sub">Home Screen tip: Share → Add to Home Screen (opens full-screen like an app).</div>
       </section>
     </main>
   </div>
 
   <script src="app.js"></script>
   <script>
+    // Register offline caching
     if ("serviceWorker" in navigator) {
       navigator.serviceWorker.register("./sw.js").catch(() => {});
     }
