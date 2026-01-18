@@ -25,15 +25,16 @@
         </div>
       </div>
 
-      <!-- Right side now JUST the pub logo -->
       <div class="brandRight">
-        <img src="holmesdale.png" alt="Lord Holmesdale" class="logo logo-pub logo-pub-large" />
+        <button class="ghost" id="bigModeBtn" type="button">Big screen: Off</button>
+        <img src="holmesdale.png" alt="Lord Holmesdale" class="logo logo-pub-large" />
       </div>
     </header>
 
     <main class="grid">
       <!-- MAIN TRACKING CARD -->
-      <section class="card">
+      <section class="card" id="mainCard">
+        <!-- HERO ROW: Remaining + Time Remaining -->
         <div class="heroRow">
           <div class="heroStat">
             <div class="label">Points remaining</div>
@@ -50,6 +51,7 @@
 
         <div class="spacer"></div>
 
+        <!-- Secondary row: Total + Progress -->
         <div class="secondaryRow">
           <div class="stat compact">
             <div class="label">Total points</div>
@@ -68,16 +70,17 @@
           </div>
         </div>
 
-        <div class="spacer"></div>
+        <div class="spacer bigHide"></div>
 
-        <div class="row">
+        <!-- INPUT CONTROLS (hidden in big screen mode via CSS) -->
+        <div class="row bigHide">
           <input id="scoreInput" type="number" inputmode="numeric" min="0" step="1" placeholder="Score (e.g. 60)" />
           <button class="primary" id="addBtn">+ Add</button>
           <button class="danger" id="subBtn">− Subtract</button>
           <button class="warn" id="undoBtn">Undo</button>
         </div>
 
-        <div class="quick">
+        <div class="quick bigHide">
           <button class="chip" data-add="26">+26</button>
           <button class="chip" data-add="41">+41</button>
           <button class="chip" data-add="45">+45</button>
@@ -88,13 +91,13 @@
           <button class="chip" data-add="180">+180</button>
         </div>
 
-        <p class="note">
-          Charity event for <b>Macmillan Cancer Support</b>. Chalk carefully. Undo freely.
+        <p class="note bigHide">
+          Charity night for <b>Macmillan Cancer Support</b>. Chalk carefully. Undo freely.
         </p>
       </section>
 
-      <!-- SETTINGS / CONTROLS -->
-      <section class="card">
+      <!-- SETTINGS / CONTROLS (hidden in big screen mode via CSS) -->
+      <section class="card bigHide" id="settingsCard">
         <div class="row spread">
           <div>
             <div class="label">Event settings</div>
