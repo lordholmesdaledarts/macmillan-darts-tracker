@@ -2,7 +2,6 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <!-- Allow zoom (no maximum-scale=1) -->
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <meta name="theme-color" content="#0b0f14" />
   <title>Macmillan Darts Tracker</title>
@@ -54,7 +53,6 @@
     <main class="grid">
       <!-- MAIN TRACKING CARD -->
       <section class="card" id="mainCard">
-        <!-- HERO ROW: Remaining + Time Remaining -->
         <div class="heroRow">
           <div class="heroStat">
             <div class="label">Points remaining</div>
@@ -71,7 +69,6 @@
 
         <div class="spacer"></div>
 
-        <!-- Secondary row: Total + Progress -->
         <div class="secondaryRow">
           <div class="stat compact">
             <div class="label">Total points</div>
@@ -119,44 +116,55 @@
         </p>
       </section>
 
-      <!-- SETTINGS / CONTROLS (hidden in big screen mode via CSS) -->
+      <!-- SETTINGS / CONTROLS (hidden in big screen mode) -->
       <section class="card bigHide" id="settingsCard">
-        <div class="row spread">
+        <!-- Collapsible header -->
+        <button id="settingsToggle" class="settingsHeader" type="button" aria-expanded="false">
           <div>
             <div class="label">Event settings</div>
-            <div class="sub">Stored on this device (offline safe)</div>
+            <div class="sub">Tap to expand/collapse</div>
           </div>
+          <div class="chev" aria-hidden="true">⌄</div>
+        </button>
+
+        <!-- Collapsible body -->
+        <div id="settingsBody" class="settingsBody collapsed">
+          <div class="row spread">
+            <div>
+              <div class="sub">Stored on this device (offline safe)</div>
+            </div>
+            <div class="row">
+              <button id="resetBtn" type="button">Reset score</button>
+              <button id="wipeBtn" type="button">Wipe all</button>
+            </div>
+          </div>
+
+          <div class="spacer"></div>
+
           <div class="row">
-            <button id="resetBtn" type="button">Reset score</button>
-            <button id="wipeBtn" type="button">Wipe all</button>
+            <div class="field">
+              <div class="label">Target points</div>
+              <input id="targetInput" type="number" inputmode="numeric" min="1" step="1" />
+            </div>
+            <div class="field">
+              <div class="label">Hours</div>
+              <input id="hoursInput" type="number" inputmode="numeric" min="1" step="1" />
+            </div>
           </div>
-        </div>
 
-        <div class="spacer"></div>
+          <div class="spacer"></div>
 
-        <div class="row">
-          <div class="field">
-            <div class="label">Target points</div>
-            <input id="targetInput" type="number" inputmode="numeric" min="1" step="1" />
+          <div class="row">
+            <button class="primary" id="startBtn" type="button">Start / Resume</button>
+            <button id="stopBtn" type="button">Pause</button>
+            <button id="resetTimerBtn" type="button">Reset timer</button>
           </div>
-          <div class="field">
-            <div class="label">Hours</div>
-            <input id="hoursInput" type="number" inputmode="numeric" min="1" step="1" />
-          </div>
+
+          <div class="spacer"></div>
+
+          <div class="label">Recent entries</div>
+          <div class="history" id="history"></div>
         </div>
-
-        <div class="spacer"></div>
-
-        <div class="row">
-          <button class="primary" id="startBtn" type="button">Start / Resume</button>
-          <button id="stopBtn" type="button">Pause</button>
-          <button id="resetTimerBtn" type="button">Reset timer</button>
-        </div>
-
-        <div class="spacer"></div>
-
-        <div class="label">Recent entries</div>
-        <div class="history" id="history"></div>
       </section>
     </main>
   </div>
