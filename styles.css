@@ -229,19 +229,14 @@ button.warn    { background:linear-gradient(180deg,rgba(255,204,102,0.95),rgba(2
 body.big .wrap { max-width: 1400px; }
 body.big .grid { grid-template-columns: 1fr; }
 body.big .card { padding: 22px; }
-
-/* scale hero numbers to device size */
 body.big .value.hero { font-size: clamp(36px, 10vw, 72px); }
-
 body.big .label { font-size: 14px; }
 body.big .sub { font-size: 13px; }
-
 body.big .barOuter { height: 18px; }
 body.big .heroRow { gap: 18px; }
 body.big .heroStat { padding: 22px; border-radius: 22px; }
 body.big .secondaryRow { gap: 16px; }
 body.big .stat.compact { padding: 18px; }
-
 body.big .bigHide { display:none !important; }
 
 /* MOBILE */
@@ -249,6 +244,46 @@ body.big .bigHide { display:none !important; }
   .logo-mac{ width:36px; height:36px; padding:5px; }
   .logo-pub-large{ width:44px; height:44px; padding:6px; }
   .value.hero{ font-size:34px; }
+}
+
+/* =========================
+   SETTINGS COLLAPSIBLE
+   ========================= */
+.settingsHeader {
+  width: 100%;
+  display:flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  text-align: left;
+}
+
+.settingsHeader .label { margin-bottom: 2px; }
+
+.chev {
+  font-size: 18px;
+  color: var(--muted);
+  transform: rotate(0deg);
+  transition: transform 150ms ease;
+  padding: 6px 10px;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.10);
+  background: rgba(255,255,255,0.04);
+}
+
+.settingsBody {
+  margin-top: 12px;
+}
+
+.settingsBody.collapsed {
+  display: none;
+}
+
+.settingsHeader[aria-expanded="true"] .chev {
+  transform: rotate(180deg);
 }
 
 /* =========================
