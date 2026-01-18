@@ -41,24 +41,22 @@ body {
   gap:12px;
 }
 
+.brandRight {
+  justify-content:flex-end;
+}
+
 .logo {
   object-fit:contain;
   border-radius:10px;
   border:1px solid rgba(255,255,255,0.08);
 }
 
+/* slightly larger Macmillan logo */
 .logo-mac {
-  width:44px;
-  height:44px;
-  padding:6px;
+  width:54px;
+  height:54px;
+  padding:7px;
   background:#ffffff;
-}
-
-.logo-pub-large {
-  width:56px;
-  height:56px;
-  padding:8px;
-  background:rgba(255,255,255,0.06);
 }
 
 h1 {
@@ -241,8 +239,7 @@ body.big .bigHide { display:none !important; }
 
 /* MOBILE */
 @media (max-width:420px){
-  .logo-mac{ width:36px; height:36px; padding:5px; }
-  .logo-pub-large{ width:44px; height:44px; padding:6px; }
+  .logo-mac{ width:46px; height:46px; padding:6px; }
   .value.hero{ font-size:34px; }
 }
 
@@ -274,17 +271,9 @@ body.big .bigHide { display:none !important; }
   background: rgba(255,255,255,0.04);
 }
 
-.settingsBody {
-  margin-top: 12px;
-}
-
-.settingsBody.collapsed {
-  display: none;
-}
-
-.settingsHeader[aria-expanded="true"] .chev {
-  transform: rotate(180deg);
-}
+.settingsBody { margin-top: 12px; }
+.settingsBody.collapsed { display: none; }
+.settingsHeader[aria-expanded="true"] .chev { transform: rotate(180deg); }
 
 /* =========================
    CELEBRATION OVERLAY
@@ -300,9 +289,7 @@ body.big .bigHide { display:none !important; }
   z-index: 9999;
 }
 
-.celebrate.hidden {
-  display: none;
-}
+.celebrate.hidden { display: none; }
 
 .celebrateCard {
   background: linear-gradient(180deg, #142033, #0f1826);
@@ -338,6 +325,4 @@ body.big .bigHide { display:none !important; }
   gap: 10px;
 }
 
-.celebrateActions button {
-  width: 100%;
-}
+.celebrateActions button { width: 100%; }
