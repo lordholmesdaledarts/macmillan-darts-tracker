@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1" />
+  <meta name="theme-color" content="#0b0f14" />
+  <title>Macmillan Darts Tracker</title>
+
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="wrap">
+    <header class="title">
+      <div>
+        <h1>Macmillan Darts: 100,000 Tracker</h1>
+        <p class="sub">Add each visit score (60 / 45 / 100 / 140). Offline. Undo. Big buttons.</p>
+      </div>
+      <div class="pill" id="statusPill">Ready</div>
+    </header>
+
+    <main class="grid">
+      <section class="card">
+        <div class="statRow">
+          <div class="stat">
+            <div class="label">Total points</div>
+            <div class="value" id="total">0</div>
+          </div>
+          <div class="stat">
+            <div class="label">Remaining</div>
+            <div class="value" id="remaining">100,000</div>
+          </div>
+        </div>
+
+        <div class="spacer"></div>
+
+        <div class="label">Progress</div>
+        <div class="barOuter"><div class="barInner" id="bar"></div></div>
+        <div class="row spread">
+          <div class="sub mono" id="pct">0.0%</div>
+          <div class="sub mono" id="targetLabel">Target: 100,000</div>
+        </div>
+
+        <div class="spacer"></div>
+
+        <div class="row">
+          <input id="scoreInput" type="number" inputmode="numeric" min="0" step="1" placeholder="Score (e.g., 60)" />
+          <button class="primary" id="addBtn">+ Add</button>
+          <button class="danger" id="subBtn">− Subtract</button>
+          <button class="warn" id="undoBtn">Undo</button>
+        </div>
+
+        <div class="quick">
+          <button class="chip" data-add="26">+26</button>
+          <button class="chip" data-add="41">+41</button>
+          <button class="chip" data-add="45">+45</button>
+          <button class="chip" data-add="60">+60</button>
+          <button class="chip" data-add="85">+85</button>
+          <button class="chip" data-add="100">+100</button>
+          <button class="chip" data-add="140">+140</button>
+          <button class="chip" data-add="180">+180</button>
+        </div>
+
+        <p class="note">Tip: If the chalker panics, hit <b>Undo</b> then re-enter.</p>
+      </section>
+
+      <section class="card">
+        <div class="row spread">
+          <div>
+            <div class="label">Settings</div>
+            <div class="sub">Saved on device (offline)</div>
+          </div>
+          <div class="row">
+            <button id="resetBtn">Reset</button>
+            <button id="wipeBtn">Wipe</button>
+          </div>
+        </div>
+
+        <div class="spacer"></div>
+
+        <div class="row">
+          <div class="field">
+            <div class="label">Target points</div>
+            <input id="targetInput" type="number" inputmode="numeric" min="1" step="1" />
+          </div>
+          <div class="field">
+            <div class="label">Hours</div>
+            <input id="hoursInput" type="number" inputmode="numeric" min="1" step="1" />
+          </div>
+        </div>
+
+        <div class="spacer"></div>
+
+        <div class="row">
+          <button class="primary" id="startBtn">Start / Resume timer</button>
+          <button id="stopBtn">Stop</button>
+        </div>
+
+        <div class="spacer"></div>
+
+        <div class="stat subtle">
+          <div class="label">Time remaining</div>
+          <div class="value small mono" id="timeLeft">—</div>
+          <div class="sub mono" id="endsAt">Timer not started</div>
+        </div>
+
+        <div class="spacer"></div>
+
+        <div class="label">Recent entries</div>
+        <div class="history" id="history"></div>
+      </section>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+  <script>
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("./sw.js").catch(() => {});
+    }
+  </script>
+</body>
+</html>
