@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <!-- ✅ Allow zoom again (removed maximum-scale=1) -->
+  <!-- Allow zoom (no maximum-scale=1) -->
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <meta name="theme-color" content="#0b0f14" />
   <title>Macmillan Darts Tracker</title>
@@ -14,6 +14,25 @@
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
+
+  <!-- CELEBRATION OVERLAY -->
+  <div id="celebrateOverlay" class="celebrate hidden" aria-hidden="true">
+    <div class="celebrateCard" role="dialog" aria-modal="true" aria-labelledby="celebrateTitle">
+      <div class="celebrateEmoji">🎉</div>
+      <h2 id="celebrateTitle">Target Achieved!</h2>
+      <p>
+        Congratulations!<br />
+        Thank you for supporting<br />
+        <b>Macmillan Cancer Support</b>
+      </p>
+
+      <div class="celebrateActions">
+        <button id="closeCelebrate" class="primary" type="button">Close</button>
+        <button id="resetCelebrate" type="button">Reset score</button>
+      </div>
+    </div>
+  </div>
+
   <div class="wrap">
 
     <!-- HEADER / BRANDING -->
@@ -35,6 +54,7 @@
     <main class="grid">
       <!-- MAIN TRACKING CARD -->
       <section class="card" id="mainCard">
+        <!-- HERO ROW: Remaining + Time Remaining -->
         <div class="heroRow">
           <div class="heroStat">
             <div class="label">Points remaining</div>
@@ -51,6 +71,7 @@
 
         <div class="spacer"></div>
 
+        <!-- Secondary row: Total + Progress -->
         <div class="secondaryRow">
           <div class="stat compact">
             <div class="label">Total points</div>
@@ -74,23 +95,23 @@
         <!-- INPUT CONTROLS (hidden in big screen mode via CSS) -->
         <div class="row bigHide">
           <input id="scoreInput" type="number" inputmode="numeric" min="0" step="1" placeholder="Score (e.g. 60)" />
-          <button class="primary" id="addBtn">+ Add</button>
-          <button class="danger" id="subBtn">− Subtract</button>
-          <button class="warn" id="undoBtn">Undo</button>
+          <button class="primary" id="addBtn" type="button">+ Add</button>
+          <button class="danger" id="subBtn" type="button">− Subtract</button>
+          <button class="warn" id="undoBtn" type="button">Undo</button>
         </div>
 
         <!-- QUICK ENTRY BUTTONS -->
         <div class="quick bigHide">
-          <button class="chip" data-add="26">+26</button>
-          <button class="chip" data-add="41">+41</button>
-          <button class="chip" data-add="45">+45</button>
-          <button class="chip" data-add="60">+60</button>
-          <button class="chip" data-add="85">+85</button>
-          <button class="chip" data-add="100">+100</button>
-          <button class="chip" data-add="140">+140</button>
-          <button class="chip" data-add="180">+180</button>
-          <button class="chip" data-add="301">+301</button>
-          <button class="chip" data-add="501">+501</button>
+          <button class="chip" data-add="26" type="button">+26</button>
+          <button class="chip" data-add="41" type="button">+41</button>
+          <button class="chip" data-add="45" type="button">+45</button>
+          <button class="chip" data-add="60" type="button">+60</button>
+          <button class="chip" data-add="85" type="button">+85</button>
+          <button class="chip" data-add="100" type="button">+100</button>
+          <button class="chip" data-add="140" type="button">+140</button>
+          <button class="chip" data-add="180" type="button">+180</button>
+          <button class="chip" data-add="301" type="button">+301</button>
+          <button class="chip" data-add="501" type="button">+501</button>
         </div>
 
         <p class="note bigHide">
@@ -106,8 +127,8 @@
             <div class="sub">Stored on this device (offline safe)</div>
           </div>
           <div class="row">
-            <button id="resetBtn">Reset score</button>
-            <button id="wipeBtn">Wipe all</button>
+            <button id="resetBtn" type="button">Reset score</button>
+            <button id="wipeBtn" type="button">Wipe all</button>
           </div>
         </div>
 
@@ -127,9 +148,9 @@
         <div class="spacer"></div>
 
         <div class="row">
-          <button class="primary" id="startBtn">Start / Resume</button>
-          <button id="stopBtn">Pause</button>
-          <button id="resetTimerBtn">Reset timer</button>
+          <button class="primary" id="startBtn" type="button">Start / Resume</button>
+          <button id="stopBtn" type="button">Pause</button>
+          <button id="resetTimerBtn" type="button">Reset timer</button>
         </div>
 
         <div class="spacer"></div>
