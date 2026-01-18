@@ -4,6 +4,7 @@
   const stateKey = "macmillan_darts_tracker_pwa_v4";
   const uiKey = "macmillan_ui_bigmode";
   const celebrateKey = "macmillan_target_completed";
+  const settingsKey = "macmillan_settings_collapsed_v1";
   const now = () => Date.now();
 
   const defaultState = {
@@ -53,6 +54,20 @@
     document.body.classList.toggle("big", on);
     const btn = $("bigModeBtn");
     if (btn) btn.textContent = on ? "Big screen: On" : "Big screen: Off";
+  }
+
+  // ----- Settings collapse -----
+  function getSettingsCollapsed() {
+    // default collapsed
+    return localStorage.getItem(settingsKey) !== "0";
+  }
+
+  function setSettingsCollapsed(collapsed) {
+    localStorage.setItem(settingsKey, collapsed ? "1" : "0");
+    const body = $("settingsBody");
+    const toggle = $("settingsToggle");
+    if (body) body.classList.toggle("collapsed", collapsed);
+    if (toggle) toggle.setAttribute("aria-expanded", collapsed ? "false" : "true");
   }
 
   // ----- Celebration overlay -----
@@ -158,7 +173,7 @@
       showCelebrate();
     }
 
-    // If score goes back above 0 (e.g., subtract/undo), allow celebration again later
+    // If score goes back above 0, allow celebration again later
     if (remaining > 0 && localStorage.getItem(celebrateKey) === "1") {
       localStorage.removeItem(celebrateKey);
       hideCelebrate();
@@ -195,7 +210,6 @@
     const s = load();
     if (!s.history.length) return;
 
-    // Confirm to prevent accidental tap
     const ok = confirm("Undo the last entry?");
     if (!ok) return;
 
@@ -219,8 +233,10 @@
     localStorage.removeItem(stateKey);
     localStorage.removeItem(uiKey);
     localStorage.removeItem(celebrateKey);
+    localStorage.removeItem(settingsKey);
     hideCelebrate();
     setBigMode(false);
+    setSettingsCollapsed(true);
     render();
   }
 
@@ -308,7 +324,6 @@
     if (confirm("Reset the timer back to full length?")) resetTimer();
   });
 
-  // Quick add buttons
   document.querySelectorAll("[data-add]").forEach((btn) => {
     btn.addEventListener("click", () => {
       addDelta(clampInt(btn.getAttribute("data-add"), 0, 10000));
@@ -318,15 +333,19 @@
 
   // Celebration overlay buttons
   $("closeCelebrate")?.addEventListener("click", hideCelebrate);
-
   $("resetCelebrate")?.addEventListener("click", () => {
-    if (confirm("Reset score back to zero?")) {
-      resetScore();
-    }
+    if (confirm("Reset score back to zero?")) resetScore();
   });
 
-  // Apply big mode on load
+  // Settings collapse toggle
+  $("settingsToggle")?.addEventListener("click", () => {
+    const collapsed = $("settingsBody")?.classList.contains("collapsed");
+    setSettingsCollapsed(!collapsed);
+  });
+
+  // Apply UI preferences on load
   setBigMode(getBigMode());
+  setSettingsCollapsed(getSettingsCollapsed());
 
   setInterval(() => renderTimer(load()), 250);
   render();
